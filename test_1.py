@@ -1,73 +1,102 @@
-students = {
-    "998901111111": {
-        "name": "Ali",
-        "phone": "998901111111",
-        "age": 12,
-        "email": "Ali@gmail.com"
-    },
-    "998902222222": {
-        "name": "Ahror",
-        "phone": "998902222222",
-        "age": 13,
-        "email": "Ahror@gmail.com"
-    },
-    "998903333333": {
-        "name": "Timur",
-        "phone": "998903333333",
-        "age": 14,
-        "email": "Timur@gmail.com"
-    }
-}
+class Product:
+    def __init__(self, title, price):
+        self.title = title
+        self.price = price
 
-import re
+    def info(self):
+        return f"{self.title} | ${self.price}"
 
-sss = r'^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$'
-email_check = r'[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+'
+class TV(Product):
+    def __init__(self, title, price, display):
+        super().__init__(title, price)
+        self.display = display
+
+    def info(self):
+        return f"{self.title} | ${self.price} | Display: {self.display}\""
 
 
-def add_Student(d: dict):
-    name = input("name:")
+class PC(Product):
+    def __init__(self, title, price, ram):
+        super().__init__(title, price)
+        self.ram = ram
 
+    def info(self):
+        return f"{self.title} | ${self.price} | RAM: {self.ram}GB"
+
+
+class Phone(Product):
+    def __init__(self, title, price, camera):
+        super().__init__(title, price)
+        self.camera = camera
+
+    def info(self):
+        return f"{self.title} | ${self.price} | Camera: {self.camera}MP"
+
+
+class Market(Product):
+    def __init__(self):
+        self.products = []
+
+    def view_prodcuts(self):
+        if not self.products:
+            print("No products")
+        else:
+            for product in self.products:
+                print(product.info())
+    def add_tv(self):
+        title = input("title:")
+        price = input("price:")
+        display = input("display:")
+        tv = TV(title, price, display)
+        self.products.append(tv)
+        print("TV added")
+
+    def add_pc(self):
+        title = input("PC title:")
+        price = input("PC price:")
+        ram = input("PC RAM:")
+        pc = PC(title, price, ram)
+        self.products.append(pc)
+        print("PC added")
+
+    def add_phone(self):
+        title = input("Phone title:")
+        price = input("Phone price:")
+        camera = input("Phone camera:")
+        phone = Phone(title, price, camera)
+        self.products.append(phone)
+        print("Phone added")
+
+    def remove_prodcuts(self):
+        self.view_prodcuts()
+        if not self.products:
+            return
+        index = int(input("index:"))-1
+        if 0<=index<len(self.products):
+            removed = self.products.pop(index)
+            print("Removed")
+        else:
+            print("Invalid")
+
+def shop_manager():
+    market = Market()
     while True:
-        phone = input("phone:")
-        if re.match(sss, phone):
+        choice = input("\n1. View all products\n2. Add TV\n3. Add PC\n4. Add Phone\n5. Remove product\n6. Exit\n ")
+        if choice == "1":
+            market.view_prodcuts()
+        elif choice == "2":
+            market.add_tv()
+        elif choice == "3":
+            market.add_pc()
+        elif choice == "4":
+            market.add_phone()
+        elif choice == "5":
+            market.remove_prodcuts()
+        elif choice == "6":
+            print("Goodbye")
             break
         else:
-            print("Xato raqam kiritdingiz. Boshidan raqam kiriting")
+            print("Invalid")
 
-    age = input("age:")
-    while True:
-        email = input("email:")
-        if re.match(email_check, email):
-            break
-        else:
-            print("Xato email kiritdingiz. Boshidan email kiriting")
+shop_manager()
 
-    s = {
-        "name": name,
-        "phone": phone,
-        "age": age,
-        "email": email
-    }
-    d[phone] = s
-    print("O‘quvchi muvaffaqiyatli qo‘shildi!")
-
-
-def view_Student(d: dict):
-    for k, v in d.items():
-        print(f"id: {k} | name: {v['name']} | phone: {v['phone']} | age: {v['age']} | email: {v['email']}")
-
-def student_manager(d: dict):
-    while True:
-        kod = input(" 1.View student \n 2.Add student \n 3.Break \n")
-        if kod == "1":
-            view_Student(d)
-        elif kod == "2":
-            add_Student(d)
-        elif kod == "3":
-            print("Dastur yakunlandi.")
-            break
-        else:
-            print("Xato raqam")
-
-student_manager(students)
